@@ -3,6 +3,13 @@
 
 @import 'tailwindcss';
 
+@theme {
+    
+    /* --color-*: initial; to disable all default colors */
+    --color-primary: #2B85FF;
+    --color-secondary: #EF863E;
+}
+
 @layer base{
     html{
         font-family: "Poppins","sans-serif";
@@ -12,6 +19,9 @@
         overflow-x: hidden;
     }
 }
-@layer components{
-    
+
+
+
+@layer components {
+
 }
