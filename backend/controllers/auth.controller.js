@@ -61,3 +61,21 @@ export const createUser = async(req,res) => {
         accessToken,
     })
   }
+
+  export const getUser = async (req,res) => {
+    const {user} = req.user;
+
+    const isUser = await User.findById(user._id);
+    if(!isUser){
+        return res.sendStatus(401);
+    }
+    return res.json({
+        user:{
+            _id:isUser._id,
+            fullName: isUser.fullName,
+            email:isUser.email,
+            createdAt:isUser.createdAt
+        },
+        message:"",
+    })
+  }
