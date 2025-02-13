@@ -3,6 +3,7 @@ import cors  from 'cors';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import authRouter from './Routes/auth.route.js';
+import noteRouter from './Routes/note.route.js';
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ app.use(
 )
 // routes
 app.use("/api/auth",authRouter);
+app.use("/api/notes",noteRouter);
 
 // app.get('/',(req,res) => {
 //     res.json({data:"hello"});
