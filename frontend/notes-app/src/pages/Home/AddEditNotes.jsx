@@ -1,16 +1,53 @@
 import React, { useState } from 'react'
 import TagInput from '../../compoents/Input/TagInput'
 import { MdClose } from 'react-icons/md';
+import axiosInstance from '../../utils/axiosInstance';
 
-const AddEditNotes = ({noteData, type, onClose}) => {
-    const [title,setTitle] = useState("");
-    const [content,setContent] = useState("");
-    const [tags,setTags] = useState([]);
+const AddEditNotes = ({noteData, type, onClose, getAllNotes, showToastMessage}) => {
+    const [title,setTitle] = useState(noteData?.title || "");
+    const [content,setContent] = useState(noteData?.content || "");
+    const [tags,setTags] = useState(noteData?.tags || []);
 
     const [error,setError] = useState(null);
 
-    const addNewNote = async () => {};
-    const editNote = async() => {};
+    // Add Note
+    const addNewNote = async () => {
+      try{
+        const response = await axiosInstance.post('/notes/add',{
+          title,
+          content,
+          tags,
+        });
+        if(response.data && response.data.note){
+          showToastMessage("Note Added Successfully");
+          getAllNotes()
+          onClose()
+        }
+      }catch(error){
+        if(error.response && error.response.data && error.response.data.message){
+          setError(error.response.data.message);
+        }
+      }
+    };
+    // Edit Note
+    const editNote = async() => {
+      try{
+        const response = await axiosInstance.put(`/notes/edit/${noteData._id}`,{
+          title,
+          content,
+          tags,
+        });
+        if(response.data && response.data.note){
+          showToastMessage('Note Updated Successfully');
+          getAllNotes();
+          onClose();
+        }
+      }catch(error){
+        if(error.response && error.response.data && error.response.data.message){
+          setError(error.response.data.message);
+        }
+      }
+    };
 
     const handleAddNotes = () => {
       if(!title){
@@ -64,7 +101,9 @@ const AddEditNotes = ({noteData, type, onClose}) => {
         <TagInput tags={tags} setTags={setTags}/>
       </div>
       {error && <p className='text-red-500 text-xs pt-4'>{error}</p>}
-      <button type='submit' className=" w-full text-sm bg-primary text-white p-2 rounded my-1 hover:bg-blue-600 font-medium mt-5 p-3" onClick={handleAddNotes}>ADD</button>
+      <button type='submit' className=" w-full text-sm bg-primary text-white p-2 rounded my-1 hover:bg-blue-600 font-medium mt-5 p-3" onClick={handleAddNotes}>
+        {type === 'edit' ? 'UPDATE':'ADD'}
+      </button>
     </div>
   )
 }
